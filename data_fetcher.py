@@ -106,36 +106,88 @@ def fetch_asset_data(symbol_mapping, is_backtesting, start_date=None, end_date=N
 # (ticker, GICS sector, ESG rating)
 # Ratings: AAA -> conviction 1.0 / AA -> conviction 0.5
 STRATESG_UNIVERSE = [
-    ("NVDA", "InformationTechnology",  "AAA"),
-    ("NOW",  "InformationTechnology",  "AAA"),
-    ("EPAM", "InformationTechnology",  "AA"),
-    ("GOOGL","CommunicationServices",  "AA"),
-    ("MSI",  "InformationTechnology",  "AA"),
-    ("BSX",  "HealthCare",             "AA"),
-    ("GE",   "Industrials",            "AA"),
-    ("PGR",  "Financials",             "AAA"),
-    ("ISRG", "HealthCare",             "AAA"),
-    ("MRK",  "HealthCare",             "AAA"),
-    ("CRM",  "InformationTechnology",  "AAA"),
-    ("LLY",  "HealthCare",             "AA"),
+    ("NVDA", "InformationTechnology",  "AAA"), # Nvidia
+    ("LLY",  "HealthCare",             "AA"),  # Eli Lilly and Company
+    ("MSFT", "InformationTechnology",  "AA"),  # Microsoft
+    ("EXP",  "RealEstate",             "AA"),  # eXP Realty
+    ("RLI",  "Financials",             "AA"),  # RLI
+    ("SBGSY","Industrials",            "AA"),  # Schneider Electric
+    ("ASML", "InformationTechnology",  "AA"),  # ASML
+    ("BAH",  "Industrials",            "AA"),  # Booz Allen Hamilton
+    ("ADSK", "InformationTechnology",  "AA"),  # Autodesk
+    ("CRM",  "InformationTechnology",  "AAA"), # Salesforce
+    ("SAIL", "InformationTechnology",  "AA"),  # SailPoint
+    ("ADBE", "InformationTechnology",  "AAA"), # Adobe
+    ("MSI",  "InformationTechnology",  "AA"),  # Motorola Solutions
+    ("PG",   "ConsumerStaples",        "AA"),  # Procter & Gamble
+    ("MRK",  "HealthCare",             "AAA"), # Merck & Co.
+    ("EPAM", "InformationTechnology",  "AA"),  # EPAM Systems
+    ("HLT",  "ConsumerDiscretionary",  "AA"),  # Hilton Worldwide
+    ("SYF",  "Financials",             "AA"),  # Synchrony Financial
+    ("CSCO", "InformationTechnology",  "AA"),  # Cisco Systems
+    ("AXP",  "Financials",             "AA"),  # American Express
+    ("ACN",  "InformationTechnology",  "AA"),  # Accenture
+    ("MAR",  "ConsumerDiscretionary",  "AA"),  # Marriott International
+    ("PNFP", "Financials",             "AA"),  # Pinnacle Financial Partners
+    ("CDNS", "InformationTechnology",  "AA"),  # Cadence Design Systems
+    ("DAL",  "Industrials",            "AA"),  # Delta Air Lines
+    ("PGR",  "Financials",             "AA"),  # Progressive Corporation
+    ("IHG",  "ConsumerDiscretionary",  "AA"),  # InterContinental Hotels Group
+    ("CPT",  "InformationTechnology",  "AA"),  # CDW
+    ("CAKE", "ConsumerDiscretionary",  "AA"),  # Cheesecake Factory
+    ("DOW",  "Materials",              "AA"),  # Dow Inc.
+    ("CMCSA","CommunicationServices",  "AA"),  # Comcast
+    ("RKT",  "ConsumerDiscretionary",  "AA"),  # Rocket Companies
+    ("NOW",  "InformationTechnology",  "AA"),  # ServiceNow
+    ("MET",  "Financials",             "AA"),  # MetLife
+    ("CACC", "Financials",             "AA"),  # Credit Acceptance Corporation
+    ("COF",  "Financials",             "AA"),  # Capital One
+    ("ABBV", "HealthCare",             "AA"),  # AbbVie
+    ("Z",    "CommunicationServices",  "AA"),  # Zillow
+    ("VRTX", "HealthCare",             "AA"),  # Vertex Pharmaceuticals
+    ("TPH",  "RealEstate",             "AA"),  # Tri Pointe Homes
+    ("ELV",  "HealthCare",             "AA"),  # Elevance Health
+    ("PHM",  "RealEstate",             "AA"),  # PulteGroup
+    ("RHI",  "Industrials",            "AA"),  # Robert Half International
+    ("BAC",  "Financials",             "AA"),  # Bank of America
+    ("SYK",  "Industrials",            "AA"),  # Stryker Corporation
+    ("TGT",  "ConsumerStaples",        "AA"),  # Target Corporation
+    ("ALLY", "Financials",             "AA"),  # Ally Financial
+    ("BOX",  "InformationTechnology",  "AA"),  # Box
+    ("CRWD", "InformationTechnology",  "AA"),  # CrowdStrike
+    ("MA",   "Financials",             "AA"),  # Mastercard
+    ("FAF",  "Financials",             "AA"),  # First American Financial
+    ("H",    "ConsumerDiscretionary",  "AA"),  # Hyatt Hotels
+    ("KMX",  "ConsumerDiscretionary",  "AA"),  # CarMax
+    ("UTHR", "HealthCare",             "AA"),  # United Therapeutics
+    ("V",    "Financials",             "AA"),  # Visa
+    ("INTU", "InformationTechnology",  "AA"),  # Intuit
+    ("WK",   "InformationTechnology",  "AA"),  # Workiva
+    ("HPE",  "InformationTechnology",  "AA"),  # Hewlett Packard Enterprise
+    ("HPQ",  "InformationTechnology",  "AA"),  # HP Inc.
+    ("TEAM", "InformationTechnology",  "AA"),  # Atlassian
+    ("WMT",  "ConsumerStaples",        "AA"),  # Walmart
 ]
 
 CONVICTION          = {"AAA": 1.0, "AA": 0.5}
-SECTOR_CAP          = 0.33          # 33% max per sector (no individual asset cap)
+SECTOR_CAP          = 0.33          # 33% max per sector
 CONTROVERSY_PENALTY = 0.50          # weight halved on controversy date
-MIN_WEIGHT          = 0.02          # minimum weight floor per non-penalised ticker
+MIN_WEIGHT          = 0.0         # minimum weight floor per non-penalised ticker
 REBALANCE_FREQ      = "MS"          # month-start rebalancing
-LOOKBACK_DAYS       = 90            # explicit constant used everywhere
-MOMENTUM_WINDOW     = 63            # ~3-month momentum lookback (trading days)
-MOMENTUM_BLEND      = 0.50          # 50% inv-vol, 50% momentum
+LOOKBACK_DAYS       = 90
+MOMENTUM_WINDOW     = 30            # ~1-month momentum lookback (trading days)
+MOMENTUM_BLEND      = 0.75          # 75% momentum, 25% inv-vol
 
-# Only controversies within the 2025-2026 investment window (>5% workforce confirmed):
-#   CRM: ~5.5% cut (~4k of 73k), announced Sep 2 2025
-#   MRK:  8.0% cut (~6k of 75k), announced Jul 31 2025
+# Controversies within the 2025-2026 investment window (>5% workforce confirmed):
 STRATESG_CONTROVERSIES = [
-    # (ticker,  date,          reason,                              pct_affected)
-    ("CRM",  "2025-09-02", "4k AI-driven support cuts (~5.5%)",   0.055),
-    ("MRK",  "2025-07-31", "6k restructuring layoffs (~8%)",        0.080),
+    # (ticker,  date,          reason,                                pct_affected)
+    ("CRWD", "2025-05-07", "5% workforce reduction (500 layoffs)",    0.05),
+    ("BAH",  "2025-05-23", "7% workforce reduction (2.5k layoffs)",   0.07),
+    ("PG",   "2025-06-05", "6% workforce reduction (7k layoffs)",     0.06),
+    ("MSFT", "2025-07-02", "7% workforce reduction (15k layoffs)",    0.07),
+    ("MRK",  "2025-07-31", "8% workforce reduction (6k layoffs)",     0.08),
+    ("CRM",  "2025-09-02", "5.5% workforce reduction (4k layoffs)",   0.055),
+    ("ADSK", "2026-01-22", "7% workforce reduction (1k layoffs)",     0.07),
 ]
 
 
@@ -144,13 +196,7 @@ STRATESG_CONTROVERSIES = [
 # ---------------------------------------------------------------------------
 
 def _compute_inverse_vol_weights(returns: pd.DataFrame) -> pd.Series:
-    """
-    Inverse-volatility weighting with conviction multipliers.
-
-        weight_i = (1 / σ_i) × conviction_i,  normalised to sum to 1.
-
-    Falls back to equal-weight when all volatilities are zero.
-    """
+    """Inverse-volatility weighting with conviction multipliers."""
     tickers = returns.columns.tolist()
     if returns.shape[0] < 2:
         return pd.Series(1.0 / len(tickers), index=tickers)
@@ -169,45 +215,30 @@ def _compute_inverse_vol_weights(returns: pd.DataFrame) -> pd.Series:
     return inv_vol / total if total > 0 else pd.Series(1.0 / len(tickers), index=tickers)
 
 
-# momentum signal helper
 def _compute_momentum_weights(returns: pd.DataFrame) -> pd.Series:
-    """
-    Cross-sectional momentum: rank tickers by cumulative return over the window,
-    then score proportionally (rank / sum_of_ranks).  Negative-momentum tickers
-    receive a score of zero so they don't drag the portfolio.
-    """
+    """Cross-sectional momentum, conviction-scaled. Negative scores zeroed out."""
     tickers = returns.columns.tolist()
     if returns.shape[0] < 2:
         return pd.Series(1.0 / len(tickers), index=tickers)
 
-    cum_ret = (1 + returns).prod() - 1   # cumulative return over window
+    cum_ret = (1 + returns).prod() - 1
 
-    # Apply conviction multipliers to momentum scores as well
     for ticker, _, rating in STRATESG_UNIVERSE:
         if ticker in cum_ret.index:
             cum_ret[ticker] *= CONVICTION[rating]
 
-    # Zero out negative momentum
-    scores = cum_ret.clip(lower=0)
-    total = scores.sum()
+    scores = cum_ret.clip(lower=1e-4)
+    total  = scores.sum()
     if total <= 0:
-        # All negative — fall back to equal weight
         return pd.Series(1.0 / len(tickers), index=tickers)
     return scores / total
 
 
 def _apply_sector_cap(weights: pd.Series) -> pd.Series:
     """
-    Enforce SECTOR_CAP (35%) with no individual asset cap.
-
-    When a sector total exceeds SECTOR_CAP, each asset within that sector is
-    scaled down proportionally (preserving relative weights inside the sector)
-    until the sector total equals SECTOR_CAP.  The freed excess is redistributed
-    pro-rata to assets whose sector is still under the cap.
-
-    If no eligible recipients exist (every sector is already at the cap),
-    the excess is left uninvested — the returned weights sum to < 1 and the
-    gap is treated as a cash holding by the caller.
+    Enforce SECTOR_CAP with proportional scaling inside over-cap sectors.
+    Freed excess redistributed pro-rata to under-cap sectors.
+    Unplaceable excess stays as implicit cash (weights may sum < 1).
     """
     sector_map = {t: s for t, s, _ in STRATESG_UNIVERSE}
     w = weights.copy().clip(lower=0)
@@ -225,7 +256,7 @@ def _apply_sector_cap(weights: pd.Series) -> pd.Series:
                 for t in w.index:
                     if sector_map.get(t, "Other") == s:
                         excess += w[t] * (1.0 - scale)
-                        w[t] *= scale
+                        w[t]   *= scale
 
         if excess < 1e-9:
             break
@@ -235,11 +266,10 @@ def _apply_sector_cap(weights: pd.Series) -> pd.Series:
             s = sector_map.get(t, "Other")
             sec_total[s] = sec_total.get(s, 0.0) + w[t]
 
-        eligible = [
+        eligible  = [
             t for t in w.index
             if sec_total.get(sector_map.get(t, "Other"), 0.0) < SECTOR_CAP - 1e-9
         ]
-
         if not eligible:
             break
 
@@ -252,28 +282,20 @@ def _apply_sector_cap(weights: pd.Series) -> pd.Series:
     return w
 
 
-# minimum weight floor helper
 def _apply_min_weight_floor(weights: pd.Series, controversy_activated: set) -> pd.Series:
-    """
-    Enforce MIN_WEIGHT floor on all tickers that haven't been controversy-penalised
-    and that currently hold a non-zero weight.  Any ticker below the floor is lifted
-    to MIN_WEIGHT; the excess cost is taken pro-rata from over-floor tickers.
-
-    Controversy-penalised tickers are excluded so the penalty isn't accidentally
-    neutralised by the floor.
-    """
-    w = weights.copy()
+    """Lift non-penalised tickers below MIN_WEIGHT, funding from over-floor tickers."""
+    w        = weights.copy()
     eligible = [t for t in w.index if t not in controversy_activated and w[t] > 1e-6]
 
     if not eligible:
         return w
 
     for _ in range(20):
-        below  = [t for t in eligible if w[t] < MIN_WEIGHT - 1e-9]
+        below     = [t for t in eligible if w[t] < MIN_WEIGHT - 1e-9]
         if not below:
             break
-        deficit = sum(MIN_WEIGHT - w[t] for t in below)
-        above   = [t for t in eligible if w[t] > MIN_WEIGHT + 1e-9]
+        deficit   = sum(MIN_WEIGHT - w[t] for t in below)
+        above     = [t for t in eligible if w[t] > MIN_WEIGHT + 1e-9]
         above_sum = sum(w[t] for t in above)
         if above_sum <= 0:
             break
@@ -288,18 +310,7 @@ def _apply_min_weight_floor(weights: pd.Series, controversy_activated: set) -> p
 def run_stratesg(data: dict, start: pd.Timestamp, end: pd.Timestamp) -> tuple[pd.Series, dict]:
     """
     Simulate StratESG from start to end.
-    Returns tuple of (daily NAV series, final ticker weights dict).
-
-    Strategy rules (updated):
-      - Monthly rebalancing on the first trading day of each month.
-      - CHANGE 3: Weights = blend of inverse-volatility and 3-month momentum,
-        each computed over a strict 90-day rolling window ending on the rebalance date.
-      - CHANGE 4: 50/50 blend of inv-vol and momentum signals.
-      - CHANGE 2: Minimum 2% floor applied to non-penalised tickers after sector cap.
-      - CHANGE 1: Sector cap raised to 35%.
-      - Controversy: affected ticker's weight is halved permanently (no recovery).
-      - NAV is computed day-by-day from share holdings plus cash balance.
-        Remaining cash after full allocation flows through naturally.
+    Returns (daily NAV series, final ticker weights dict).
     """
     tickers = [t for t, _, _ in STRATESG_UNIVERSE if t in data]
 
@@ -332,7 +343,7 @@ def run_stratesg(data: dict, start: pd.Timestamp, end: pd.Timestamp) -> tuple[pd
         if reaction is not None and start <= reaction <= end:
             controversy_map[ticker] = reaction
 
-    controversy_activated = set()
+    controversy_activated: set = set()
 
     nav      = pd.Series(index=prices.index, dtype=float)
     holdings = pd.Series(0.0, index=tickers)
@@ -341,59 +352,76 @@ def run_stratesg(data: dict, start: pd.Timestamp, end: pd.Timestamp) -> tuple[pd
     current_weights = pd.Series(0.0, index=tickers)
 
     def _build_weights(as_of_date):
-        # strict 90-day rolling window (not full history)
-        window_start = as_of_date - pd.Timedelta(days=LOOKBACK_DAYS)
+        window_start   = as_of_date - pd.Timedelta(days=LOOKBACK_DAYS)
         window_returns = returns_full.loc[window_start:as_of_date]
 
-        # blend inv-vol and momentum signals
         inv_vol_w  = _compute_inverse_vol_weights(window_returns).reindex(tickers).fillna(0)
         momentum_w = _compute_momentum_weights(
-            window_returns.iloc[-MOMENTUM_WINDOW:]   # momentum over last 63 trading days
+            window_returns.iloc[-MOMENTUM_WINDOW:]
         ).reindex(tickers).fillna(0)
 
-        blended = MOMENTUM_BLEND * momentum_w + (1 - MOMENTUM_BLEND) * inv_vol_w
-
-        # Apply permanent controversy reduction
-        for ticker in controversy_activated:
-            if ticker in blended.index:
-                blended[ticker] *= CONTROVERSY_PENALTY
-
-        # Normalise before applying caps
+        momentum_w = momentum_w.clip(lower=1e-6)
+        inv_vol_w  = inv_vol_w.clip(lower=1e-6)
+        blended = (momentum_w ** MOMENTUM_BLEND) * (inv_vol_w ** (1 - MOMENTUM_BLEND))
         total = blended.sum()
         if total > 0:
             blended = blended / total
 
-        # Sector cap then minimum weight floor
-        blended = _apply_sector_cap(blended)
-        # CHANGE 2: apply floor after sector cap
-        blended = _apply_min_weight_floor(blended, controversy_activated)
+        for ticker in controversy_activated:
+            if ticker in blended.index:
+                blended[ticker] *= CONTROVERSY_PENALTY
 
+        # Redistribute freed weight to non-penalised tickers
+        penalised_total     = sum(blended[t] for t in controversy_activated if t in blended.index)
+        non_penalised       = [t for t in blended.index if t not in controversy_activated]
+        non_penalised_total = blended[non_penalised].sum()
+        if non_penalised_total > 0:
+            scale = (1.0 - penalised_total) / non_penalised_total
+            blended[non_penalised] *= scale
+
+        blended = _apply_sector_cap(blended)
+        blended = _apply_min_weight_floor(blended, controversy_activated)
         return blended
 
+    # Re-apply _apply_sector_cap at execution time inside _rebalance so
+    # that price drift between rebalances cannot cause a sector cap breach when
+    # shares are actually purchased.    
     def _rebalance(cur_nav, px):
-        """
-        Convert current_weights into share holdings.
-        Any residual (from sector cap) stays as cash — no redistribution attempted,
-        which avoids the over-investment bug from the original implementation.
-        """
         nonlocal cash
+        safe_weights = _apply_sector_cap(current_weights.copy())
+
+        # Renormalise after sector cap so freed weight doesn't become cash
+        total = safe_weights.sum()
+        if total > 0:
+            safe_weights = safe_weights / total
+
         h = pd.Series(0.0, index=tickers)
         for t in tickers:
             price = px.get(t, np.nan)
-            wt    = current_weights.get(t, 0.0)
+            wt    = safe_weights.get(t, 0.0)
             if not np.isnan(price) and price > 0 and wt > 0:
                 h[t] = (wt * cur_nav) / price
 
-        # Cash is simply whatever wasn't invested — no redistribution
         actual_invested = float((h * px).sum())
         cash = cur_nav - actual_invested
         return h
 
-    # ========== MAIN SIMULATION LOOP ==========
+# ========== MAIN SIMULATION LOOP ==========
     for i, date in enumerate(prices.index):
         px = prices.loc[date]
 
-        # (a) Regular monthly rebalance
+        # (a) Activate any controversies for today FIRST, before building weights,
+        #     so a controversy falling on a rebalance day gets folded into the single
+        #     monthly rebalance — one set of trades, not two.
+        triggered = [
+            t for t, rd in controversy_map.items()
+            if rd == date and t not in controversy_activated
+        ]
+        for t in triggered:
+            print(f"\n  *** Controversy: {t} on {date.date()} — halving weight ***")
+            controversy_activated.add(t)
+
+        # (b) Regular monthly rebalance (weights now already reflect any new controversies)
         if date in rebal_dates:
             current_weights = _build_weights(date)
             cur_nav = 1.0 if i == 0 else float((holdings * px).sum() + cash)
@@ -408,21 +436,9 @@ def run_stratesg(data: dict, start: pd.Timestamp, end: pd.Timestamp) -> tuple[pd
             if invested < 0.9999:
                 print(f"    cash: {1.0 - invested:.4f}")
 
-        # (b) Day-0 initialisation when the first day is not a rebalance date
-        if i == 0 and date not in rebal_dates:
-            current_weights = _build_weights(date)
-            holdings = _rebalance(1.0, px)
-
-        # (c) Controversy reaction — trigger rebalance on controversy date
-        triggered = [
-            t for t, rd in controversy_map.items()
-            if rd == date and t not in controversy_activated
-        ]
-        if triggered:
-            for t in triggered:
-                print(f"\n  *** Controversy: {t} on {date.date()} — halving weight ***")
-                controversy_activated.add(t)
-
+        # (c) Controversy mid-month rebalance — only fires when today is NOT already
+        #     a scheduled rebalance day (avoids double rebalance)
+        elif triggered:
             current_weights = _build_weights(date)
             cur_nav = float((holdings * px).sum() + cash)
             holdings = _rebalance(cur_nav, px)
@@ -436,11 +452,32 @@ def run_stratesg(data: dict, start: pd.Timestamp, end: pd.Timestamp) -> tuple[pd
             if invested < 0.9999:
                 print(f"    cash: {1.0 - invested:.4f}")
 
-        # (d) Mark-to-market NAV
+        # (d) Day-0 initialisation when first day is not a rebalance date
+        if i == 0 and date not in rebal_dates:
+            current_weights = _build_weights(date)
+            holdings = _rebalance(1.0, px)
+
+        # (e) Mark-to-market NAV
         nav.iloc[i] = float((holdings * px).sum() + cash)
 
-    ticker_weights = current_weights.to_dict()
-    invested = sum(ticker_weights.values())
+    final_px    = prices.iloc[-1]
+    # Zero out micro-positions before final cash sweep to avoid fractional share noise
+    min_final_weight = 0.005
+    final_portfolio_value = float((holdings * final_px).sum() + cash)
+    for t in tickers:
+        if holdings[t] > 0 and (holdings[t] * final_px.get(t, 0)) / final_portfolio_value < min_final_weight:
+            cash += holdings[t] * final_px.get(t, 0)
+            holdings[t] = 0.0
+    # After the main simulation loop, before computing final weights
+    if cash > 0.01 * float((holdings * final_px).sum() + cash):
+        holdings = _rebalance(float((holdings * final_px).sum() + cash), final_px)
+    final_value = float((holdings * final_px).sum() + cash)
+    ticker_weights = {
+        t: float(holdings[t] * final_px.get(t, 0)) / final_value
+        for t in tickers
+        if holdings[t] > 1e-8
+    }
+    invested       = sum(ticker_weights.values())
 
     print(f"\nFinal weights on {prices.index[-1].date()}:")
     for t, w in sorted(ticker_weights.items(), key=lambda x: -x[1]):
@@ -451,6 +488,7 @@ def run_stratesg(data: dict, start: pd.Timestamp, end: pd.Timestamp) -> tuple[pd
         print(f"  cash: {1.0 - invested:.4f}")
 
     return nav, ticker_weights
+
 
 # ---------------------------------------------------------------------------
 # Data fetching — Alpaca (live / paper trading)
@@ -475,7 +513,7 @@ def fetch_historical_data(symbols, start_date, end_date=None,
     data_dict = {}
     for symbol in symbols:
         if symbol in bars.data and bars.data[symbol]:
-            b = bars.data[symbol]
+            b  = bars.data[symbol]
             df = pd.DataFrame(
                 {
                     "Open":   [x.open   for x in b],
@@ -504,14 +542,13 @@ def _nearest_trading_date(df: pd.DataFrame, target: pd.Timestamp) -> pd.Timestam
         return matches[0]
     for offset in range(1, 6):
         candidate = pd.Timestamp(target_date, tz="UTC") + pd.Timedelta(days=offset)
-        matches = df.index[df.index.normalize() == candidate]
+        matches   = df.index[df.index.normalize() == candidate]
         if not matches.empty:
             return matches[0]
     return None
 
 
 def _build_event_map(data: dict) -> dict:
-    """Group CASE_STUDY_EVENTS by symbol, resolving each date against the df index."""
     event_map = {symbol: [] for symbol in data}
     for ticker, date_str, label, color in CASE_STUDY_EVENTS:
         if ticker not in data:
@@ -534,12 +571,12 @@ def _build_event_map(data: dict) -> dict:
 # ---------------------------------------------------------------------------
 LINE_COLORS   = {"NVDA": "#1f77b4", "AMZN": "#ff7f0e"}
 EVENT_LABELS  = {
-    "darkgreen":  "BPTW / GPTW",
-    "red":        "Union / protest",
-    "darkred":    "Mass layoff",
+    "darkgreen": "BPTW / GPTW",
+    "red":       "Union / protest",
+    "darkred":   "Mass layoff",
 }
-INVEST_START  = pd.Timestamp("2025-02-01", tz="UTC")
-INVEST_END    = pd.Timestamp("2026-02-01", tz="UTC")
+INVEST_START  = pd.Timestamp("2025-04-01", tz="UTC")
+INVEST_END    = pd.Timestamp("2026-03-31", tz="UTC")
 INVEST_AMOUNT = 10_000   # USD
 
 
@@ -566,17 +603,12 @@ def _annotate_events(ax, df: pd.DataFrame, events: list, y_min: float, y_max: fl
             label,
             xy=(event_ts, close_price),
             xytext=(event_ts, y_data),
-            xycoords="data",
-            textcoords="data",
-            fontsize=7,
-            color=color,
-            va="top",
-            ha="center",
+            xycoords="data", textcoords="data",
+            fontsize=7, color=color, va="top", ha="center",
             arrowprops=dict(arrowstyle="-", color=color, alpha=0.35, lw=0.7),
             bbox=dict(boxstyle="round,pad=0.18", fc="white", ec=color,
                       alpha=0.88, lw=0.7),
-            clip_on=False,
-            zorder=7,
+            clip_on=False, zorder=7,
         )
 
         if color not in color_proxies:
@@ -591,8 +623,10 @@ def _annotate_events(ax, df: pd.DataFrame, events: list, y_min: float, y_max: fl
 def plot_closing_prices(data: dict, event_map: dict,
                         output_path: str = "output/price_comparison.png"):
     fig, axes = plt.subplots(1, 2, figsize=(16, 5), sharey=False)
-    fig.suptitle("Leader (NVDA) / Laggard (AMZN) - Stock Price with Key Events (Feb 2021 - Feb 2026)",
-                 fontsize=13, fontweight="bold", y=0.95)
+    fig.suptitle(
+        "Leader (NVDA) / Laggard (AMZN) - Stock Price with Key Events (Feb 2021 - Feb 2026)",
+        fontsize=13, fontweight="bold", y=0.95,
+    )
 
     for ax, symbol in zip(axes, list(data.keys())):
         df         = data[symbol]
@@ -604,18 +638,15 @@ def plot_closing_prices(data: dict, event_map: dict,
         y_min, y_max = 0, 275
         color_proxies = _annotate_events(ax, df, events, y_min, y_max)
 
-        ax.set_title(f"{symbol}", fontsize=12, fontweight="bold",
-                     color=line_color, pad=6)
+        ax.set_title(f"{symbol}", fontsize=12, fontweight="bold", color=line_color, pad=6)
         ax.set_ylabel("Price (USD)")
         ax.set_xlabel("Date")
         ax.set_ylim(y_min, y_max)
         ax.grid(axis="y", linestyle=":", alpha=0.4)
         ax.spines["top"].set_visible(False)
         ax.spines["right"].set_visible(False)
-
         ax.legend(handles=list(color_proxies.values()),
-                  fontsize=8, loc="lower right", framealpha=0.9,
-                  edgecolor="#CCCCCC")
+                  fontsize=8, loc="lower right", framealpha=0.9, edgecolor="#CCCCCC")
 
     fig.tight_layout()
     fig.savefig(output_path, dpi=200, bbox_inches="tight")
@@ -624,7 +655,7 @@ def plot_closing_prices(data: dict, event_map: dict,
 
 
 # ---------------------------------------------------------------------------
-# Plot 2 -- $10k invested in February 2025, value today
+# Plot 2 -- $10k invested, value over window
 # ---------------------------------------------------------------------------
 def plot_investment_growth(data: dict,
                            output_path: str = "output/investment_growth.png"):
@@ -632,7 +663,7 @@ def plot_investment_growth(data: dict,
 
     for symbol, df in data.items():
         line_color = LINE_COLORS.get(symbol, "steelblue")
-        subset = df.loc[df.index >= INVEST_START]
+        subset     = df.loc[df.index >= INVEST_START]
         if subset.empty:
             print(f"  Warning: no data for {symbol} from {INVEST_START.date()}")
             continue
@@ -652,8 +683,7 @@ def plot_investment_growth(data: dict,
         )
 
     ax.axhline(INVEST_AMOUNT, color="grey", linewidth=0.9, linestyle=":", alpha=0.7)
-
-    ax.set_title(f" Growth of ${INVEST_AMOUNT:,} Invested in February 2025 - January 2026",
+    ax.set_title(f"Growth of ${INVEST_AMOUNT:,} Invested — Feb 2025 to Jan 2026",
                  fontsize=12, fontweight="bold", pad=8)
     ax.set_ylabel("Portfolio Value (USD)")
     ax.set_xlabel("Date")
@@ -682,7 +712,6 @@ def plot_glassdoor(output_path: str = "output/glassdoor_ratings.png"):
             marker="o", markersize=6, label="NVDA")
     ax.plot(years, amzn_vals, color=LINE_COLORS["AMZN"], linewidth=2,
             marker="o", markersize=6, label="AMZN")
-
     ax.fill_between(years, nvda_vals, amzn_vals, alpha=0.08, color="#888888")
 
     for year, nv, amz in zip(years, nvda_vals, amzn_vals):
@@ -708,7 +737,7 @@ def plot_glassdoor(output_path: str = "output/glassdoor_ratings.png"):
 
 
 # ---------------------------------------------------------------------------
-# Plot 4 -- StratESG vs HAPI vs SPY ($10k invested Feb 2025)
+# Plot 4 -- StratESG vs HAPI vs SPY
 # ---------------------------------------------------------------------------
 def plot_stratesg(data: dict, output_path: str = "output/stratesg_comparison.png"):
     start = INVEST_START
@@ -725,9 +754,9 @@ def plot_stratesg(data: dict, output_path: str = "output/stratesg_comparison.png
         data.update(extra)
 
     esg_nav, _ = run_stratesg(data, start, end)
-    esg_growth = esg_nav * INVEST_AMOUNT
+    esg_growth  = esg_nav * INVEST_AMOUNT
 
-    benchmarks = {"SPY": "SPY", "HAPI": "HAPI"}
+    benchmarks   = {"SPY": "SPY", "HAPI": "HAPI"}
     bmark_growth: dict[str, pd.Series] = {}
     for label, ticker in benchmarks.items():
         if ticker not in data:
@@ -742,14 +771,9 @@ def plot_stratesg(data: dict, output_path: str = "output/stratesg_comparison.png
             if not subset.empty:
                 bmark_growth[label] = (subset / subset.iloc[0]) * INVEST_AMOUNT
 
-    palette = {
-        "StratESG": "#2ecc71",
-        "SPY":      "#3498db",
-        "HAPI":     "#e67e22",
-    }
+    palette = {"StratESG": "#2ecc71", "SPY": "#3498db", "HAPI": "#e67e22"}
 
     fig, ax = plt.subplots(figsize=(10, 5))
-
     end_annotations = []
 
     def _plot_series(series, label, color):
@@ -766,21 +790,22 @@ def plot_stratesg(data: dict, output_path: str = "output/stratesg_comparison.png
     end_annotations.sort(key=lambda x: x[0], reverse=True)
     last_x = esg_growth.dropna().index[-1]
     for rank, (final_val, label, color, text) in enumerate(end_annotations):
-        y_offset = rank * -4
         ax.annotate(
             text,
             xy=(last_x, final_val),
-            xytext=(10, y_offset), textcoords="offset points",
+            xytext=(10, rank * -6), textcoords="offset points",
             fontsize=8.5, color=color, va="center",
             fontweight="bold", clip_on=False,
         )
 
-    # Distinct color per controversy event
     CONTROVERSY_COLORS = [
-        "#c0392b",   # strong red    — first event
-        "#d35400",   # burnt orange  — second event
-        "#7d3c98",   # purple        — third (if ever added)
-        "#1a5276",   # dark blue     — fourth
+        "#c0392b",  # strong red
+        "#d35400",  # burnt orange
+        "#f1c40f",  # yellow
+        "#2ecc71",  # green
+        "#3498db",  # blue
+        "#5b2c6f",  # indigo
+        "#8e44ad",  # violet
     ]
 
     controversy_in_range = [
@@ -789,7 +814,7 @@ def plot_stratesg(data: dict, output_path: str = "output/stratesg_comparison.png
         if start <= to_utc(date_str) <= end
     ]
 
-    controversy_handles = []   # collected for the legend
+    controversy_handles = []
     if controversy_in_range:
         for i, (ticker, date_str, reason) in enumerate(controversy_in_range):
             color    = CONTROVERSY_COLORS[i % len(CONTROVERSY_COLORS)]
@@ -797,44 +822,31 @@ def plot_stratesg(data: dict, output_path: str = "output/stratesg_comparison.png
             nearby   = esg_growth.index[esg_growth.index >= event_ts]
             if nearby.empty:
                 continue
-
             plot_ts  = nearby[0]
             plot_val = esg_growth.loc[plot_ts]
 
-            # Vertical dashed line spanning the full chart height
             ax.axvline(plot_ts, color=color, linewidth=1.1,
                        linestyle="--", alpha=0.55, zorder=2)
-
-            # Dot on the StratESG line
             ax.scatter(plot_ts, plot_val, color=color, zorder=6,
                        s=60, edgecolors="white", linewidths=0.8)
-
-            # Build legend handle: dot + label
-            legend_label = f"{ticker}: {reason}"
-            handle = mlines.Line2D(
-                [], [], color=color,
-                marker="o", linestyle="--",
-                markersize=6, linewidth=1.1,
-                label=legend_label
-            )
-            controversy_handles.append(handle)
+            controversy_handles.append(mlines.Line2D(
+                [], [], color=color, marker="o", linestyle="--",
+                markersize=6, linewidth=1.1, label=f"{ticker}: {reason}",
+            ))
 
     ax.axhline(INVEST_AMOUNT, color="#AAAAAA", linewidth=0.9, linestyle=":")
-
-    ax.set_title("StratESG vs SPY vs HAPI- 1 year growth on $10k invested in Feb 2025",
+    ax.set_title("StratESG vs SPY vs HAPI — 1 year growth on $10k invested",
                  fontsize=12, fontweight="bold", pad=8)
     ax.set_ylabel("Portfolio Value (USD)")
     ax.set_xlabel("Date")
 
-    # Two-group legend: strategy lines (upper-left) + controversies (lower-left)
     strategy_legend = ax.legend(fontsize=9, loc="upper left",
                                 framealpha=0.9, edgecolor="#CCCCCC")
     if controversy_handles:
-        ax.add_artist(strategy_legend)   # keep first legend visible
+        ax.add_artist(strategy_legend)
         ax.legend(handles=controversy_handles, fontsize=8,
                   loc="lower right", framealpha=0.9,
-                  edgecolor="#CCCCCC", title="Controversies",
-                  title_fontsize=8.5)
+                  edgecolor="#CCCCCC", title="Controversies", title_fontsize=8.5)
 
     ax.grid(axis="y", linestyle=":", alpha=0.4)
     ax.spines["top"].set_visible(False)
@@ -846,83 +858,257 @@ def plot_stratesg(data: dict, output_path: str = "output/stratesg_comparison.png
     plt.show()
 
 
-# ---------------------------------------------------------------------------
-# Plot 5 - StratESG allocation breakdown (pie chart by sector with ticker breakdown)
-# ---------------------------------------------------------------------------
-def plot_stratesg_allocation_breakdown(data: dict, output_path: str = "output/stratesg_allocation_breakdown.png"):
+def plot_stratesg_allocation_breakdown(
+    data: dict,
+    output_path: str = "output/stratesg_allocation_breakdown.png",
+):
+    """
+    Two-part allocation chart:
+
+    Top    — donut chart with one slice per sector, labeled with sector name + %.
+    Bottom — grid of horizontal bar charts, one panel per sector.
+             Each bar is a ticker ranked by weight, labeled left (ticker) and
+             right (exact %). Controversy-penalised tickers are coloured in
+             the controversy accent colour and marked with a dagger (†).
+
+    Layout auto-scales: adding tickers or sectors requires no manual tuning.
+    """
+    import math
+    import matplotlib.pyplot as plt
+    import numpy as np
+
+    # ── Run strategy ──────────────────────────────────────────────────────────
     start = INVEST_START
     end   = INVEST_END
     _, ticker_weights = run_stratesg(data, start, end)
 
-    print("Final ticker weights:")
-    for ticker, weight in sorted(ticker_weights.items(), key=lambda x: -x[1]):
-        print(f"  {ticker}: {weight:.4f}")
+    # ── Build sector → [(ticker, weight)] lookup ──────────────────────────────
+    sector_map      = {t: s for t, s, _ in STRATESG_UNIVERSE}
+    controversy_set = {t for t, _, _, _ in STRATESG_CONTROVERSIES}
 
-    invested = sum(ticker_weights.values())
-    cash_weight = 1.0 - invested
-    if cash_weight > 1e-4:
-        print(f"  cash:  {cash_weight:.4f}")
+    sectors_dict: dict[str, list[tuple[str, float]]] = {}
+    for t, _, _ in STRATESG_UNIVERSE:
+        if t not in ticker_weights:
+            continue
+        s = sector_map[t]
+        sectors_dict.setdefault(s, []).append((t, ticker_weights[t]))
+    for s in sectors_dict:
+        sectors_dict[s].sort(key=lambda x: -x[1])
 
-    sectors_dict = {}
-    for ticker, _, _ in STRATESG_UNIVERSE:
-        if ticker in ticker_weights:
-            sector = next((s for t, s, _ in STRATESG_UNIVERSE if t == ticker), "Other")
-            sectors_dict.setdefault(sector, {})[ticker] = ticker_weights[ticker]
+    # Only keep tickers with positive weight
+    sectors_dict = {
+        s: [(t, w) for t, w in pairs if w > 0]
+        for s, pairs in sectors_dict.items()
+        if any(w > 0 for _, w in pairs)
+    }
 
-    sector_totals = {s: sum(v.values()) for s, v in sectors_dict.items()}
+    sector_totals  = {s: sum(w for _, w in pairs) for s, pairs in sectors_dict.items()}
+    
+    # Filter before sorting so sorted_sectors only contains sectors that will actually render
+    sectors_dict = {
+        s: [(t, w) for t, w in pairs if w >= 0.005]
+        for s, pairs in sectors_dict.items()
+    }
+    sectors_dict = {s: pairs for s, pairs in sectors_dict.items() if pairs}
+
+    # Recompute totals after filtering so donut sizes stay consistent with bar panels
+    sector_totals = {s: sum(w for _, w in pairs) for s, pairs in sectors_dict.items()}
+
     sorted_sectors = sorted(sector_totals.items(), key=lambda x: -x[1])
 
-    sector_base_colors = plt.cm.Set2(np.linspace(0, 1, len(sorted_sectors) + (1 if cash_weight > 1e-4 else 0)))
-    sector_to_color = {s: sector_base_colors[i] for i, (s, _) in enumerate(sorted_sectors)}
+    invested    = sum(ticker_weights.values())
+    cash_weight = max(0.0, 1.0 - invested)
 
-    labels, sizes, colors = [], [], []
+    # ── Design tokens ─────────────────────────────────────────────────────────
+    BG           = "#FAFAF8"
+    PANEL_BG     = "#FFFFFF"
+    GRID_CLR     = "#EEEEEC"
+    TEXT_DARK    = "#1A1A2E"
+    TEXT_MID     = "#555566"
+    CONTROV_CLR  = "#C0392B"
+    CASH_CLR     = "#B8B8B8"
 
-    for sector, _ in sorted_sectors:
-        for ticker, weight in sorted(sectors_dict[sector].items(), key=lambda x: -x[1]):
-            labels.append(ticker)
-            sizes.append(weight)
-            colors.append(sector_to_color[sector])
+    SECTOR_PALETTE = [
+        "#2E86AB", "#E67E22", "#27AE60", "#8E44AD", "#E74C3C",
+        "#16A085", "#F39C12", "#2C3E50", "#D35400", "#1ABC9C",
+        "#8E44AD", "#27AE60",
+    ]
+    sector_colors = {
+        s: SECTOR_PALETTE[i % len(SECTOR_PALETTE)]
+        for i, (s, _) in enumerate(sorted_sectors)
+    }
 
+    # ── Layout constants (tune these to adjust density) ───────────────────────
+    N_COLS       = 3
+    BAR_HEIGHT   = 0.42   # bar thickness in axes-data units
+    SLOT_IN      = 0.46   # inches of vertical space per ticker row
+    HEADER_IN    = 0.40   # inches reserved for panel title
+    PANEL_PAD_IN = 0.28   # vertical gap between panel rows
+    DONUT_H_IN   = 4.6
+    FIG_W_IN     = 15.0
+
+    # Per-panel height scales with ticker count — uniform bar size regardless
+    def panel_h_in(sector):
+        return len(sectors_dict[sector]) * SLOT_IN + HEADER_IN
+
+    n_rows = math.ceil(len(sorted_sectors) / N_COLS)
+
+    # Each grid row is as tall as its tallest panel (+ gap)
+    def row_max_h_in(row_idx):
+        row_sectors = [s for i, (s, _) in enumerate(sorted_sectors) if i // N_COLS == row_idx]
+        return max(panel_h_in(s) for s in row_sectors)
+
+    row_heights_in = [row_max_h_in(r) + PANEL_PAD_IN for r in range(n_rows)]
+    fig_h_in = DONUT_H_IN + sum(row_heights_in) + 0.4
+
+    def to_frac(inches):
+        """Convert inches to figure-height fraction."""
+        return inches / fig_h_in
+
+    # ── Figure ────────────────────────────────────────────────────────────────
+    fig = plt.figure(figsize=(FIG_W_IN, fig_h_in), facecolor=BG)
+
+    # ── Donut ─────────────────────────────────────────────────────────────────
+    donut_frac = to_frac(DONUT_H_IN)
+    ax_donut = fig.add_axes([0.22, 1.0 - donut_frac + 0.01, 0.56, donut_frac - 0.04])
+    ax_donut.set_facecolor(BG)
+
+    donut_labels = [s for s, _ in sorted_sectors]
+    donut_sizes  = [v for _, v in sorted_sectors]
+    donut_colors = [sector_colors[s] for s in donut_labels]
     if cash_weight > 1e-4:
-        labels.append("Cash")
-        sizes.append(cash_weight)
-        colors.append(sector_base_colors[len(sorted_sectors)])
+        donut_labels.append("Cash")
+        donut_sizes.append(cash_weight)
+        donut_colors.append(CASH_CLR)
 
-    fig, ax = plt.subplots(figsize=(13, 8))
-
-    wedges, texts, autotexts = ax.pie(
-        sizes, labels=labels, colors=colors,
-        autopct="%1.1f%%", startangle=90,
-        textprops={"fontsize": 9, "weight": "bold"},
-        wedgeprops=dict(edgecolor="white", linewidth=1.5),
+    wedges, _ = ax_donut.pie(
+        donut_sizes,
+        colors=donut_colors,
+        startangle=90,
+        wedgeprops=dict(width=0.50, edgecolor=BG, linewidth=2.2),
     )
 
-    for autotext in autotexts:
-        autotext.set_color("white")
-        autotext.set_fontweight("bold")
-        autotext.set_fontsize(8)
+    # Centre label
+    date_label = end.strftime("%b %Y") if hasattr(end, "strftime") else str(end)
+    ax_donut.text(0,  0.06, "StratESG", ha="center", va="center",
+                  fontsize=11, fontweight="bold", color=TEXT_DARK)
+    ax_donut.text(0, -0.18, date_label, ha="center", va="center",
+                  fontsize=8, color=TEXT_MID)
 
-    legend_elements = [
-        mlines.Line2D([0], [0], marker="o", color="w",
-                      markerfacecolor=sector_to_color[sector], markersize=10,
-                      label=f"{sector} ({sector_totals[sector]:.1%})")
-        for sector, _ in sorted_sectors
-    ]
-    if cash_weight > 1e-4:
-        legend_elements.append(
-            mlines.Line2D([0], [0], marker="o", color="w",
-                          markerfacecolor=sector_base_colors[len(sorted_sectors)],
-                          markersize=10, label=f"Cash ({cash_weight:.1%})")
+    # Wedge leader-line labels
+    #SHORTEN = {
+    #    "Information": "Info", "Consumer": "Cons.", "Communication": "Comm."
+    #}
+    for wedge, label, size in zip(wedges, donut_labels, donut_sizes):
+        angle_r = np.deg2rad((wedge.theta2 + wedge.theta1) / 2.0)
+        x_mid,  y_mid  = 0.78 * np.cos(angle_r), 0.78 * np.sin(angle_r)
+        x_text, y_text = 1.22 * np.cos(angle_r), 1.22 * np.sin(angle_r)
+        short = label
+        #for long, abbr in SHORTEN.items():
+        #    short = short.replace(long, abbr)
+        ax_donut.annotate(
+            f"{short}\n{size:.1%}",
+            xy=(x_mid, y_mid), xytext=(x_text, y_text),
+            fontsize=7.5, ha="left" if x_text >= 0 else "right",
+            va="center", color=TEXT_DARK,
+            arrowprops=dict(arrowstyle="-", color="#CCCCCC", lw=0.9),
         )
 
-    ax.legend(handles=legend_elements, loc="upper left", bbox_to_anchor=(1, 0.5),
-              fontsize=10, framealpha=0.95, title="Sectors", title_fontsize=11)
+    date_full = end.strftime("%B %-d, %Y") if hasattr(end, "strftime") else str(end)
+    ax_donut.set_title(
+        f"StratESG — Sector & Asset Allocation   |   {date_full}",
+        fontsize=13, fontweight="bold", color=TEXT_DARK, pad=16,
+    )
 
-    ax.set_title("StratESG Portfolio Allocation by Asset (Jan 2026)",
-                 fontsize=13, fontweight="bold", pad=20)
+    # ── Bar panels ────────────────────────────────────────────────────────────
+    L_MARGIN = 0.055
+    R_MARGIN = 0.975
+    T_START  = 1.0 - donut_frac - 0.015   # figure-fraction just below donut
+    col_w    = (R_MARGIN - L_MARGIN) / N_COLS
+    col_gap  = 0.025
+    panel_w  = col_w - col_gap
 
-    fig.tight_layout()
-    fig.savefig(output_path, dpi=200, bbox_inches="tight")
+    all_weights  = [w for pairs in sectors_dict.values() for _, w in pairs]
+    global_xmax  = max(all_weights) * 1.40 if all_weights else 0.01
+
+    for idx, (sector, sec_total) in enumerate(sorted_sectors):
+        row = idx // N_COLS
+        col = idx  % N_COLS
+
+        tickers = sectors_dict[sector]
+        # drop zero-weight tickers just in case (shouldn't be any, but just to be safe)
+        tickers = [(t, w) for t, w in tickers if w > 0.0]
+        n       = len(tickers)
+
+        rows_above = sum(row_heights_in[:row])
+        l = L_MARGIN + col * col_w + col_gap / 2
+        # Top-align: pin the panel's top edge to the row's top edge (minus half the gap),
+        # then extend downward by its own height — short panels flush with the row top,
+        # eliminating the awkward gap above panels with fewer tickers.
+        row_top = T_START - to_frac(rows_above) - to_frac(PANEL_PAD_IN / 2)
+        h = to_frac(panel_h_in(sector))
+        b = row_top - h
+
+        ax = fig.add_axes([l, b, panel_w, h])
+        ax.set_facecolor(PANEL_BG)
+        for sp in ax.spines.values():
+            sp.set_visible(False)
+        ax.tick_params(length=0)
+
+        color      = sector_colors[sector]
+        labels     = [t for t, _ in tickers]
+        values     = [w for _, w in tickers]
+        is_cont    = [t in controversy_set for t in labels]
+        bar_colors = [CONTROV_CLR if c else color for c in is_cont]
+
+        y_pos = list(range(n - 1, -1, -1))  # top-to-bottom order
+
+        bars = ax.barh(y_pos, values, color=bar_colors,
+                       height=BAR_HEIGHT, edgecolor="none")
+
+        # Subtle vertical grid
+        for xv in [0.02, 0.04, 0.06, 0.08]:
+            if xv < global_xmax:
+                ax.axvline(xv, color=GRID_CLR, lw=0.6, zorder=0)
+
+        # Ticker labels (left y-axis)
+        ax.set_yticks(y_pos)
+        ax.set_yticklabels(
+            [f"{t} †" if c else t for t, c in zip(labels, is_cont)],
+            fontsize=6.5, color=TEXT_DARK,
+        )
+        for ticklabel, cont in zip(ax.get_yticklabels(), is_cont):
+            if cont:
+                ticklabel.set_color(CONTROV_CLR)
+                ticklabel.set_fontweight("semibold")
+
+        # Percentage labels (right of bar)
+        for bar, val in zip(bars, values):
+            ax.text(
+                val + global_xmax * 0.032,
+                bar.get_y() + bar.get_height() / 2,
+                f"{val:.1%}",
+                va="center", ha="left", fontsize=7, color=TEXT_MID,
+            )
+
+        ax.set_xlim(0, global_xmax)
+        ax.set_xticks([])
+        ax.set_ylim(-0.6, n - 0.4)
+        ax.set_title(
+            f"{sector}  ·  {sec_total:.1%}",
+            fontsize=8.5, fontweight="bold",
+            color=color, pad=5, loc="left",
+        )
+
+    # ── Controversy footnote ──────────────────────────────────────────────────
+    if controversy_set & set(ticker_weights.keys()):
+        fig.text(
+            0.5, 0.003,
+            "† Weight halved due to confirmed workforce controversy (>5%)",
+            ha="center", fontsize=7.5, color=CONTROV_CLR, style="italic",
+        )
+
+    fig.savefig(output_path, dpi=200, bbox_inches="tight", facecolor=BG)
     print(f"Saved -> {output_path}")
     plt.show()
 
@@ -945,8 +1131,8 @@ if __name__ == "__main__":
 
     event_map = _build_event_map(data)
 
-    plot_closing_prices(data, event_map)          # -> output/price_comparison.png
-    plot_investment_growth(data)                  # -> output/investment_growth.png
-    plot_glassdoor()                              # -> output/glassdoor_ratings.png
-    plot_stratesg(data)                           # -> output/stratesg_comparison.png
-    plot_stratesg_allocation_breakdown(data)      # -> output/stratesg_allocation_breakdown.png
+    plot_closing_prices(data, event_map)
+    plot_investment_growth(data)
+    plot_glassdoor()
+    plot_stratesg(data)
+    plot_stratesg_allocation_breakdown(data)
