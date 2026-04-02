@@ -857,6 +857,29 @@ def plot_stratesg(data: dict, output_path: str = "output/stratesg_comparison.png
     print(f"Saved -> {output_path}")
     plt.show()
 
+    # ── Performance metrics table ─────────────────────────────────────────────
+    all_metrics = []
+
+    # StratESG NAV starts at 1.0 by construction
+    all_metrics.append(compute_metrics(esg_nav, "StratESG"))
+
+    for label, series in bmark_growth.items():
+        # bmark_growth is in dollar terms — normalise to 1.0
+        bmark_nav = series / series.iloc[0]
+        all_metrics.append(compute_metrics(bmark_nav, label))
+
+    metrics_df = pd.DataFrame(all_metrics).set_index("Label")
+
+    print("\n" + "=" * 72)
+    print("  PERFORMANCE METRICS  (Apr 2025 – Mar 2026, RF = 4.5% p.a.)")
+    print("=" * 72)
+    print(metrics_df.to_string())
+    print("=" * 72 + "\n")
+
+    # Optional: also save to CSV for further analysis
+    metrics_df.to_csv("output/performance_metrics.csv")
+    print("Saved -> output/performance_metrics.csv")
+
 
 def plot_stratesg_allocation_breakdown(
     data: dict,
@@ -1112,6 +1135,55 @@ def plot_stratesg_allocation_breakdown(
     print(f"Saved -> {output_path}")
     plt.show()
 
+
+def compute_metrics(nav: pd.Series, label: str, risk_free_rate: float = 0.045) -> dict:
+    """
+    Compute annualised performance metrics from a daily NAV series (starting at 1.0).
+    risk_free_rate: annualised, e.g. 0.045 for 4.5% (approx 2025 US T-bill rate)
+    """
+    returns = nav.pct_change().dropna()
+    n_days  = len(returns)
+    ann     = 252  # trading days
+
+    # ── Return metrics ────────────────────────────────────────────────────────
+    total_return     = nav.iloc[-1] / nav.iloc[0] - 1
+    ann_return       = (1 + total_return) ** (ann / n_days) - 1
+
+    # ── Risk metrics ─────────────────────────────────────────────────────────
+    ann_vol          = returns.std() * np.sqrt(ann)
+    daily_rf         = (1 + risk_free_rate) ** (1 / ann) - 1
+    excess_returns   = returns - daily_rf
+    sharpe           = (excess_returns.mean() / returns.std()) * np.sqrt(ann)
+
+    # Sortino (downside deviation only)
+    downside         = returns[returns < daily_rf] - daily_rf
+    downside_std     = np.sqrt((downside ** 2).mean()) * np.sqrt(ann)
+    sortino          = (ann_return - risk_free_rate) / downside_std if downside_std > 0 else np.nan
+
+    # Max drawdown
+    cumulative       = (1 + returns).cumprod()
+    rolling_max      = cumulative.cummax()
+    drawdown_series  = (cumulative - rolling_max) / rolling_max
+    max_drawdown     = drawdown_series.min()
+
+    # Calmar ratio (ann return / abs(max drawdown))
+    calmar           = ann_return / abs(max_drawdown) if max_drawdown != 0 else np.nan
+
+    # Win rate
+    win_rate         = (returns > 0).mean()
+
+    return {
+        "Label":           label,
+        "Total Return":    f"{total_return:.2%}",
+        "Ann. Return":     f"{ann_return:.2%}",
+        "Ann. Volatility": f"{ann_vol:.2%}",
+        "Sharpe Ratio":    f"{sharpe:.3f}",
+        "Sortino Ratio":   f"{sortino:.3f}",
+        "Max Drawdown":    f"{max_drawdown:.2%}",
+        "Calmar Ratio":    f"{calmar:.3f}",
+        "Win Rate":        f"{win_rate:.2%}",
+        "# Trading Days":  n_days,
+    }
 
 # ---------------------------------------------------------------------------
 # Entry point

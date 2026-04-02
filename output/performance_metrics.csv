@@ -1,0 +1,4 @@
+Label,Total Return,Ann. Return,Ann. Volatility,Sharpe Ratio,Sortino Ratio,Max Drawdown,Calmar Ratio,Win Rate,# Trading Days
+StratESG,7.89%,7.99%,17.12%,0.277,0.202,-8.80%,0.908,51.41%,249
+SPY,13.95%,14.13%,18.94%,0.559,0.517,-12.05%,1.172,55.02%,249
+HAPI,14.17%,14.36%,17.89%,0.593,0.548,-12.18%,1.178,55.82%,249
