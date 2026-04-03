@@ -46,7 +46,7 @@ CASE_STUDY_EVENTS = [
     ("NVDA", "2023-01-15", "BPTW #5\nGPTW #6",   "darkgreen"),
     ("NVDA", "2024-01-15", "BPTW #2\nGPTW #3",   "darkgreen"),
     ("NVDA", "2025-01-15", "BPTW #4\nGPTW #5",   "darkgreen"),
-    ("NVDA", "2026-01-15", "BPTW #3",             "darkgreen"),
+    ("NVDA", "2026-01-15", "BPTW #3\nGPTW #6",   "darkgreen"),
     ("AMZN", "2022-04-01", "ALU union\nvote victory", "red"),
     ("AMZN", "2022-11-16", "10k layoffs",         "darkred"),
     ("AMZN", "2023-01-18", "18k layoffs",         "darkred"),
@@ -575,7 +575,7 @@ EVENT_LABELS  = {
     "red":       "Union / protest",
     "darkred":   "Mass layoff",
 }
-INVEST_START  = pd.Timestamp("2025-04-01", tz="UTC")
+INVEST_START  = pd.Timestamp("2025-05-01", tz="UTC")
 INVEST_END    = pd.Timestamp("2026-03-31", tz="UTC")
 INVEST_AMOUNT = 10_000   # USD
 
@@ -835,7 +835,7 @@ def plot_stratesg(data: dict, output_path: str = "output/stratesg_comparison.png
             ))
 
     ax.axhline(INVEST_AMOUNT, color="#AAAAAA", linewidth=0.9, linestyle=":")
-    ax.set_title("StratESG vs SPY vs HAPI — 1 year growth on $10k invested",
+    ax.set_title("StratESG vs SPY vs HAPI — growth on $10k invested (May 1, 2025 to Mar 31, 2026)",
                  fontsize=12, fontweight="bold", pad=8)
     ax.set_ylabel("Portfolio Value (USD)")
     ax.set_xlabel("Date")
