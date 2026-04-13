@@ -835,7 +835,7 @@ def plot_stratesg(data: dict, output_path: str = "output/stratesg_comparison.png
             ))
 
     ax.axhline(INVEST_AMOUNT, color="#AAAAAA", linewidth=0.9, linestyle=":")
-    ax.set_title("StratESG vs SPY — growth on $10k invested (May 1, 2023 to Mar 31, 2025)",
+    ax.set_title("StratESG vs SPY — growth on $10k invested (May 1, 2025 to Mar 31, 2026)",
                  fontsize=12, fontweight="bold", pad=8)
     ax.set_ylabel("Portfolio Value (USD)")
     ax.set_xlabel("Date")
